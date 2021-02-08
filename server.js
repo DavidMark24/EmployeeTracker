@@ -2,7 +2,11 @@ const express = require("express");
 const inquirer = require("inquirer");
 const mysql = require("mysql");
 const consoleTable = require("console.table");
-const { start } = require("repl");
+const env = require("dotenv").config() ;
+
+// Express
+
+const app = express();
 
 // Connection
 
@@ -10,7 +14,7 @@ const connection = mysql.createConnection({
   host: "localhost",
   port: 3306,
   user: "root",
-  password: "blackmamba24!",
+  password: process.env.db_password ,
   database: "employee_db",
 });
 
@@ -61,22 +65,43 @@ function start() {
           viewAllDepartments();
           break;
 
-          case "Add Employee?" :
-            addEmployee();
-            break;  
+        case "Add Employee?":
+          addEmployee();
+          break;
 
         case "Update Employee?":
           updateEmployee();
           break;
-        
-        case "Add Role?" :
-            addRole() 
-            break;
-        
-        case "Add Department?" :
-            addDepartment()
-            break;  
-              
+
+        case "Add Role?":
+          addRole();
+          break;
+
+        case "Add Department?":
+          addDepartment();
+          break;
       }
     });
+}
+
+// All Employee function
+
+function viewAllEmployees() {
+  connection.query("SELECT employee.first_name, employee.last_name, department.name AS Department FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id ORDER BY employee.id;", 
+  function(err, res) {
+    if (err) throw err
+    console.table(res)
+    start()
+  })
+}
+
+// View Roles 
+
+function viewAllRoles() {
+  connection.query("SELECT employee.first_name, employee.last_name, role.title AS Title FROM employee JOIN role ON employee.role_id = role.id;", 
+  function(err, res) {
+  if (err) throw err
+  console.table(res)
+  start()
+  })
 }

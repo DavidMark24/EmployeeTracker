@@ -121,7 +121,6 @@ function viewAllDepartments() {
 
 let roleArr = [];
 
-let roleArr = [];
 function selectRole() {
   connection.query("SELECT * FROM role", function(err, res) {
     if (err) throw err
@@ -141,23 +140,23 @@ function selectManager() {
   connection.query("SELECT first_name, last_name FROM employee WHERE manager_id IS NULL", function(err, res) {
     if (err) throw err
     for (let i = 0; i < res.length; i++) {
-      managersArr.push(res[i].first_name);
+      managerArr.push(res[i].first_name);
     }
 
   })
-  return managersArr;
+  return managerArr;
 }
 // Add Employee function 
 
 function addEmployee() { 
   inquirer.prompt([
       {
-        name: "firstname",
+        name: "firstName",
         type: "input",
         message: "Enter their first name "
       },
       {
-        name: "lastname",
+        name: "lastName",
         type: "input",
         message: "Enter their last name "
       },
@@ -219,16 +218,17 @@ function updateEmployee() {
           choices: selectRole()
         },
     ]).then(function(val) {
-      const roleId = selectRole().indexOf(val.role) + 1
-      connection.query("UPDATE employee SET WHERE ?", 
-      {
+      let roleId = selectRole().indexOf(val.role) + 1   ;
+
+      connection.query("UPDATE employee SET ? WHERE ?", 
+      [{
         last_name: val.lastName
          
       }, 
       {
         role_id: roleId
          
-      }, 
+      }], 
       function(err){
           if (err) throw err
           console.table(val)
@@ -285,7 +285,7 @@ function addRole() {
           message: "What Department would you like to add?"
         }
     ]).then(function(res) {
-        const query = connection.query(
+        let query = connection.query(
             "INSERT INTO department SET ? ",
             {
               name: res.name
@@ -298,4 +298,5 @@ function addRole() {
             }
         )
     })
+
   }

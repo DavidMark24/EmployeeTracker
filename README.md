@@ -1,4 +1,4 @@
-# EmployeeTracker
+# Employee Tracker
 
 ## Description
 An application that lets you view, add and update employee information.
